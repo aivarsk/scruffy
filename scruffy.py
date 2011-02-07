@@ -57,17 +57,14 @@ def frandrange(start, stop):
     return r / 10.0
 
 SVG_NS = 'http://www.w3.org/2000/svg'
-SVG_RECT = '{%s}rect' % SVG_NS
-SVG_LINE = '{%s}line' % SVG_NS
-SVG_POLYGON = '{%s}polygon' % SVG_NS
-SVG_POLYLINE = '{%s}polyline' % SVG_NS
-SVG_TEXT = '{%s}text' % SVG_NS
+def ns(tag):
+    return '{%s}%s' % (SVG_NS, tag)
 
 def transformRect2Polygon(elem):
     pass
 
 def transformLine2Polyline(elem):
-    elem.tag = SVG_POLYLINE
+    elem.tag = ns('polyline')
     elem.points = '%(x1)s,%(y1)s %(x2)s,%(y2)s' % elem.attrib
     for key in ('x1', 'x2', 'y1', 'y2'): del elem.attrib[key]
 
@@ -115,7 +112,7 @@ def transformAddShade(root, elem):
 
     shade.attrib['fill'] = '#999999'
     shade.attrib['stroke'] = '#999999'
-    shade.attrib['stroke-width'] = '1'
+    shade.attrib['stroke-width'] = shade.attrib.get('stroke-width', '1')
     shade.attrib['transform'] = 'translate(4, 4)'
     shade.attrib['style'] = 'opacity:0.75;filter:url(#filterBlur)'
 
@@ -133,32 +130,37 @@ def transformAddGradient(elem):
 
 def _transform(root, options, level=0):
     for child in root[:]:
-        if child.tag == SVG_RECT:
+        if child.tag == ns('rect'):
             transformRect2Polygon(child)
-        elif child.tag == SVG_LINE:
+        elif child.tag == ns('line'):
             transformLine2Polyline(child)
 
-        if child.tag == SVG_POLYGON:
+        if child.tag == ns('polygon'):
             transformPolygon(child)
             transformAddShade(root, child)
             transformAddGradient(child)
-        elif child.tag == SVG_POLYLINE:
+        elif child.tag == ns('path'):
+            #transformAddShade(root, child)
+            pass
+        elif child.tag == ns('polyline'):
             transformPolyline(child)
-        elif child.tag == SVG_TEXT:
+            #see class diagram - shade of inside line
+            #transformAddShade(root, child)
+        elif child.tag == ns('text'):
             if options.font:
                 transformText(child, options.font)
 
         _transform(child, options, level + 1)
 
     if level == 0:
-        defs = root.makeelement('defs', {})
+        defs = root.makeelement(ns('defs'), {})
         root.insert(0, defs)
-        filterBlur = etree.SubElement(defs, 'filter', {'id': 'filterBlur'})
-        etree.SubElement(filterBlur, 'feGaussianBlur', {'stdDeviation': '0.69', 'id':'feGaussianBlurBlur'})
+        filterBlur = etree.SubElement(defs, ns('filter'), {'id': 'filterBlur'})
+        etree.SubElement(filterBlur, ns('feGaussianBlur'), {'stdDeviation': '0.69', 'id':'feGaussianBlurBlur'})
         for name in _usedColors:
-            gradient = etree.SubElement(defs, 'linearGradient', {'id': name, 'x1':"0%", 'xy':"0%", 'x2':"100%", 'y2':"100%"})
-            etree.SubElement(gradient, 'stop', {'offset':'0%', 'style':'stop-color:white;stop-opacity:1'}) 
-            etree.SubElement(gradient, 'stop', {'offset':'50%', 'style':'stop-color:%s;stop-opacity:1' % name}) 
+            gradient = etree.SubElement(defs, ns('linearGradient'), {'id': name, 'x1':"0%", 'xy':"0%", 'x2':"100%", 'y2':"100%"})
+            etree.SubElement(gradient, ns('stop'), {'offset':'0%', 'style':'stop-color:white;stop-opacity:1'}) 
+            etree.SubElement(gradient, ns('stop'), {'offset':'50%', 'style':'stop-color:%s;stop-opacity:1' % name}) 
 
 def transform(fin, fout, options):
     '''

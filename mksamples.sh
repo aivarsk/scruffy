@@ -15,6 +15,7 @@
 ./yuml2dot.py --png "[<<IDisposable>>;Session]" > samples/sample12.png
 ./yuml2dot.py --png "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13.png
 ./yuml2dot.py --png "[note: You can stick notes on diagrams too!{bg:cornsilk}],[Customer]<>1-orders 0..*>[Order], [Order]++*-*>[LineItem], [Order]-1>[DeliveryMethod], [Order]*-*>[Product], [Category]<->[Product], [DeliveryMethod]^[National], [DeliveryMethod]^[International]" > samples/sample14.png
+./yuml2dot.py --png "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15.png
 
 ./yuml2dot.py --png --font-family Purisa --scruffy "[User]" > samples/sample01-scruffy.png
 ./yuml2dot.py --png --font-family Purisa --scruffy "[Customer]->[Billing Address]" > samples/sample02-scruffy.png
@@ -32,4 +33,5 @@
 ./yuml2dot.py --png --font-family Purisa --scruffy "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13-scruffy.png
 ./yuml2dot.py --png --font-family Purisa --scruffy "[note: You can stick notes on diagrams too!{bg:cornsilk}],[Customer]<>1-orders 0..*>[Order], [Order]++*-*>[LineItem], [Order]-1>[DeliveryMethod], [Order]*-*>[Product], [Category]<->[Product], [DeliveryMethod]^[National], [DeliveryMethod]^[International]" > samples/sample14-scruffy.png
 
+./yuml2dot.py --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15-scruffy.png
 

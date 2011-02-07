@@ -51,18 +51,21 @@ import textwrap
 
 def splitYUML(spec):
     word = ''
-    shape = False
+    shapeDepth = 0
     for c in spec:
-        if not shape and c == '[':
+        if c == '[':
+            shapeDepth += 1
+        elif c == ']':
+            shapeDepth -= 1
+
+        if shapeDepth == 1 and c == '[':
             yield word.strip()
-            shape = True
             word = c
             continue
 
         word += c
-        if shape and c == ']':
+        if shapeDepth == 0 and c == ']':
             yield word.strip()
-            shape = False
             word = ''
     if word:
         yield word.strip()
@@ -91,6 +94,11 @@ def yumlExpr(spec):
 
             if part.startswith('note:'):
                 expr.append(('note', part[5:].strip(), bg))
+            elif '[' in part and ']' in part:
+                p = part.split('[')
+                part = p[0]
+                nodes = [node.replace(']', '').strip() for node in p[1:]]
+                expr.append(('cluster', part.strip(), bg, nodes))
             else:
                 expr.append(('record', part.strip(), bg))
         elif '-' in part:
@@ -142,8 +150,16 @@ def yumlExpr(spec):
             expr.append(('edge', lstyle, ltext, rstyle, rtext, style))
     if expr: yield expr
 
+def recordName(label):
+    # for classes/records allow first entry with all attributes and later only with class name
+    name = label.split('|')[0].strip()
+    return name
+
 def yuml2dot(spec, options):
     uids = {}
+    class Foo:
+        def __init__(self, label):
+            self.uid = label
 
     exprs = list(yumlExpr(spec))
 
@@ -157,11 +173,25 @@ def yuml2dot(spec, options):
 
     for expr in exprs:
         for elem in expr:
-            if elem[0] in ('note', 'record'):
+            if elem[0] == 'cluster':
                 label = elem[1]
-                if label in uids: continue
+                if recordName(label) in uids: continue
+                uid = 'cluster_A' + str(len(uids))
+                uids[recordName(label)] = Foo(uid)
+
+                dot.append('    subgraph %s {' % (uid))
+                dot.append('        label = "%s"' % (label))
+            
+                if options.font:
+                    dot.append('        fontname = "%s"' % (options.font))
+                for node in elem[3]:
+                    dot.append('        %s' % (uids[node].uid))
+                dot.append('    }')
+            elif elem[0] in ('note', 'record'):
+                label = elem[1]
+                if recordName(label) in uids: continue
                 uid = 'A' + str(len(uids))
-                uids[label] = uid
+                uids[recordName(label)] = Foo(uid)
 
                 dot.append('    node [')
                 dot.append('        shape = "%s"' % (elem[0]))
@@ -180,7 +210,10 @@ def yuml2dot(spec, options):
                         label = '{' + label + '}'
                     label = label.replace('|', '\\n|')
                 else:
-                    label = '\\n'.join(textwrap.wrap(label, 20, break_long_words=False))
+                    lines = []
+                    for line in label.split(';'):
+                        lines.extend(textwrap.wrap(line, 20, break_long_words=False))
+                    label = '\\n'.join(lines)
 
                 label = label.replace(';', '\\n')
                 label = label.replace(' ', '\\ ')
@@ -211,7 +244,7 @@ def yuml2dot(spec, options):
             if options.font:
                 dot.append('        fontname = "%s"' % (options.font))
             dot.append('    ]')
-            dot.append('    %s -> %s' % (uids[expr[0][1]], uids[expr[2][1]]))
+            dot.append('    %s -> %s' % (uids[recordName(expr[0][1])].uid, uids[recordName(expr[2][1])].uid))
 
     dot.append('}')
     return '\n'.join(dot) + '\n'
@@ -258,7 +291,13 @@ def main():
     if options.output:
         fout = open(options.output, 'wb')
 
-    transform(args[0], fout, options)
+    if len(args) == 0:
+        spec = sys.stdin.read()
+        spec = spec.replace('\n', ',')
+    else:
+        spec = args[0]
+
+    transform(spec, fout, options)
 
 if __name__ == '__main__':
     main()
