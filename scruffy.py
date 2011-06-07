@@ -32,9 +32,19 @@ import math
 import random
 import xml.etree.ElementTree as etree
 
+gCoordinates = 'px'
+
+def getPixels(n):
+    if gCoordinates == 'px': return n
+    elif gCoordinates == 'in': return n * 96.0
+
+def putPixels(n):
+    if gCoordinates == 'px': return n
+    elif gCoordinates == 'in': return n / 96.0
+
 def parsePoints(points):
     points = points.split()
-    return [(float(x), float(y)) for x, y in [point.split(',') for point in points]]
+    return [(getPixels(float(x)), getPixels(float(y))) for x, y in [point.split(',') for point in points]]
 
 def lineLength(p1, p2):
     dx = p2[0] - p1[0]
@@ -61,11 +71,21 @@ def ns(tag):
     return '{%s}%s' % (SVG_NS, tag)
 
 def transformRect2Polygon(elem):
-    pass
+    elem.tag = ns('polygon')
+    x = float(elem.attrib['x'])
+    y = float(elem.attrib['y'])
+    w = float(elem.attrib['width'])
+    h = float(elem.attrib['height'])
+    elem.attrib['points'] = '%f,%f %f,%f %f,%f %f,%f' % (
+            x, y,
+            x + w, y,
+            x + w, y + h,
+            x, y + h
+            )
 
 def transformLine2Polyline(elem):
     elem.tag = ns('polyline')
-    elem.points = '%(x1)s,%(y1)s %(x2)s,%(y2)s' % elem.attrib
+    elem.attrib['points'] = '%(x1)s,%(y1)s %(x2)s,%(y2)s' % elem.attrib
     for key in ('x1', 'x2', 'y1', 'y2'): del elem.attrib[key]
 
 def transformPolyline(elem):
@@ -85,14 +105,14 @@ def transformPolyline(elem):
 
     newPoints.append(points[-1])
 
-    elem.attrib['points'] = ' '.join(['%f,%f' % p for p in newPoints])
+    elem.attrib['points'] = ' '.join(['%f,%f' % (putPixels(p[0]), putPixels(p[1])) for p in newPoints])
 
 _usedColors = {}
 
 def transformPolygon(elem):
     transformPolyline(elem)
     fill = elem.get('fill', '')
-    if fill == 'none':
+    if not fill or fill == 'none':
         elem.attrib['fill'] = 'white'
 
 def transformText(elem, font):
@@ -113,8 +133,8 @@ def transformAddShade(root, elem):
     shade.attrib['fill'] = '#999999'
     shade.attrib['stroke'] = '#999999'
     shade.attrib['stroke-width'] = shade.attrib.get('stroke-width', '1')
-    shade.attrib['transform'] = 'translate(4, 4)'
-    shade.attrib['style'] = 'opacity:0.75;filter:url(#filterBlur)'
+    shade.attrib['transform'] = 'translate(%f, %f)' % (putPixels(4), putPixels(4))
+    #shade.attrib['style'] = 'opacity:0.75;filter:url(#filterBlur)'
 
 def transformAddGradient(elem):
     if elem.get('fill', '') == 'white' and elem.get('stroke', '') == 'white':
@@ -124,7 +144,7 @@ def transformAddGradient(elem):
     fill = elem.get('fill', '')
     if fill == 'none':
         elem.attrib['fill'] = 'white'
-    elif fill != 'black':
+    elif fill != 'black' and fill:
         _usedColors[fill] = True
         elem.attrib['style'] = 'fill:url(#' + fill + ');' + elem.attrib.get('style', '')
 
@@ -135,10 +155,12 @@ def _transform(root, options, level=0):
         elif child.tag == ns('line'):
             transformLine2Polyline(child)
 
-        if child.tag == ns('polygon'):
+        # Skip background rect/polygon
+        if child.tag == ns('polygon') and level != 0:
             transformPolygon(child)
             transformAddShade(root, child)
             transformAddGradient(child)
+
         elif child.tag == ns('path'):
             #transformAddShade(root, child)
             pass
@@ -170,6 +192,13 @@ def transform(fin, fout, options):
         options.font (string)   Font family to use (Ubuntu: Purisa)
     '''
     root = etree.parse(fin).getroot()
+
+
+    w, h = root.attrib.get('width', ''), root.attrib.get('height', '')
+    if w.endswith('in') or h.endswith('in'):
+        global gCoordinates
+        gCoordinates = 'in'
+
     _transform(root, options)
 
     scruffySvg = etree.tostring(root) + '\n'
