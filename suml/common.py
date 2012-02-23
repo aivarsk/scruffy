@@ -30,3 +30,26 @@ def defaultScruffyFont():
             return fname
 
     return None
+
+class Box:
+    n = 0
+    def __init__(self, name, spec):
+        self.name = name
+        self.spec = spec
+        self.uid = 'A%d' % Box.n
+        Box.n += 1
+
+    def update(self, spec):
+        if len(self.spec) < len(spec):
+            self.spec = spec
+        return self
+
+_boxes = {}
+def getBox(spec):
+    name = spec.split('|')[0].strip()
+    if name not in _boxes:
+        _boxes[name] = Box(name, spec)
+    return _boxes[name].update(spec)
+
+def getBoxes():
+    return _boxes.values()

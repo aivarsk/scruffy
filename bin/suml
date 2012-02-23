@@ -1,12 +1,45 @@
 #!/usr/bin/env python
 
 import sys
+import optparse
 
-if '--sequence' in sys.argv:
-    sys.argv.remove('--sequence')
-    import suml.suml2pic
-    suml.suml2pic.main()
+parser = optparse.OptionParser(usage='usage: %prog [options] <sUML string>')
+parser.add_option('-p', '--png', action='store_true', dest='png',
+                help='create a png file')
+parser.add_option('-s', '--svg', action='store_true', dest='svg',
+                help='create a svg file')
+parser.add_option('--scruffy', action='store_true', dest='scruffy',
+                help='process result with scruffy (works for svg and png output)')
+parser.add_option('--sequence', action='store_true', dest='sequence',
+                help='draw sequence diagram')
+parser.add_option('--class', action='store_true', dest='klass',
+                help='draw class diagram')
+parser.add_option('-o', '--output', action='store', dest='output',
+                help='output file name')
+parser.add_option('--font-family', action='store', dest='font',
+                help='set output font family')
+(options, args) = parser.parse_args()
+
+if len(args) > 1:
+    parser.error('Too many arguments')
+
+fout = sys.stdout
+if options.output:
+    fout = open(options.output, 'wb')
+
+if len(args) == 0:
+    spec = sys.stdin.read()
+    spec = spec.replace('\n', ',')
 else:
-    if '--class' in sys.argv: sys.argv.remove('--class')
+    spec = args[0]
+
+if options.scruffy and not options.font:
+    import suml.common
+    options.font = suml.common.defaultScruffyFont()
+
+if options.sequence:
+    import suml.suml2pic
+    suml.suml2pic.transform(spec, fout, options)
+else:
     import suml.yuml2dot
-    suml.yuml2dot.main()
+    suml.yuml2dot.transform(spec, fout, options)
