@@ -133,7 +133,9 @@ def transformAddShade(root, elem):
     shade.attrib['fill'] = '#999999'
     shade.attrib['stroke'] = '#999999'
     shade.attrib['stroke-width'] = shade.attrib.get('stroke-width', '1')
-    shade.attrib['transform'] = 'translate(%f, %f)' % (putPixels(4), putPixels(4))
+    # check for transform
+    #shade.attrib['transform'] = 'translate(%f, %f)' % (putPixels(4), putPixels(-4))
+    shade.attrib['transform'] = 'translate(%f, %f) ' % (putPixels(4), putPixels(4))
     #shade.attrib['style'] = 'opacity:0.75;filter:url(#filterBlur)'
 
 def transformAddGradient(elem):
@@ -218,7 +220,7 @@ def main():
     parser.add_option('-o', '--output', action='store', dest='output',
                     help='output file name')
     parser.add_option('--font-family', action='store', dest='font',
-                    help='output file name')
+                    help='set output font family')
     (options, args) = parser.parse_args()
 
     if len(args) > 1:

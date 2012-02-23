@@ -281,7 +281,7 @@ def main():
     parser.add_option('-o', '--output', action='store', dest='output',
                     help='output file name')
     parser.add_option('--font-family', action='store', dest='font',
-                    help='output file name')
+                    help='set output font family')
     (options, args) = parser.parse_args()
 
     if len(args) > 1:
@@ -296,6 +296,10 @@ def main():
         spec = spec.replace('\n', ',')
     else:
         spec = args[0]
+
+    if options.scruffy and not options.font:
+        import common
+        options.font = common.defaultScruffyFont()
 
     transform(spec, fout, options)
 
