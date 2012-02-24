@@ -1,6 +1,26 @@
-Scruffy UML: Creates UML diagrams using yUML-like (http://yuml.me) syntax
+Scruffy UML: Creates UML diagrams using yUML-like (http://yuml.me) syntax.
 
 Requires dot (http://www.graphviz.org/) and rsvg-convert (http://librsvg.sourceforge.net/), has been tested on Ubuntu.
+
+Class diagrams
+--------------
+
+The same syntax as yUML (http://yuml.me/diagram/scruffy/class/draw):
+
+================  =========================================================  
+Class             [Customer]
+Directional       [Customer]->[Order]
+Bidirectional     [Customer]<->[Order]
+Aggregation       [Customer]+-[Order] or [Customer]<>-[Order]
+Composition       [Customer]++-[Order]
+Inheritance       [Customer]^[Cool Customer], [Customer]^[Uncool Customer]
+Dependencies      [Customer]uses-.->[PaymentStrategy]
+Cardinality       [Customer]<1-1..2>[Address]
+Labels            [Person]customer-billingAddress[Address]
+Notes             [Person]-[Address],[Address]-[note: Value Object]
+Full Class        [Customer|Forename;Surname;Email|Save()]
+Splash of Colour  [Customer{bg:orange}]<>1->*[Order{bg:green}]
+================  =========================================================  
 
 suml --png "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13.png
 
@@ -18,15 +38,16 @@ suml --png --font-family Purisa --scruffy "[note: You can stick notes on diagram
 
 .. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample14-scruffy.png
 
-yUML++
-------
 
-Class name (string till the first pipe) is the unique block identifier not the whole text inside square brackets. So [classA|field1;field2] and [classA] is the same block. Fields and methdods from the first occurance are used.
+Class diagram extensions
+------------------------
 
-[classA|field1;field2]-[BoxX]
-[classA]-[BoxY]
+There are some extensions to yUML syntax:
 
-Initial cluster support, cluster specification must be the last.
+[ClassA|field1;field2] and following [ClassA] refer to the same class (block) so
+you don't have to repeat all the class members in each relation.
+
+You can group put classes (blocks) inside another block using "embedded classes" like [Group [NodeA][NodeB]] This is not related to UML class diagrams, but might be useful to communicate you ideas.
 
 suml --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15-scruffy.png
 
@@ -36,9 +57,11 @@ Sequence diagrams
 -----------------
 
 Some initial support for sequence diagrams:
-[object]
-[object1]message>[object2]
-[object1]<message[object2]
+
+=============== ========================================================
+Object          [Object]
+Send message    [Object1]Message>[Object2] or [Object1]<Message[Object2]
+=============== ========================================================
 
 suml --png --scruffy --sequence "[Patron]order food>[Waiter],[Waiter]order food>[Cook],[Waiter]serve wine>[Patron],[Cook]pickup>[Waiter],[Waiter]serve food>[Patron],[Patron]pay>[Cashier]" > tmp/sequence1-scruffy.png
 
