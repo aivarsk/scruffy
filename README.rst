@@ -1,6 +1,7 @@
 Scruffy UML: Creates UML diagrams using yUML-like (http://yuml.me) syntax.
 
-Requires dot (http://www.graphviz.org/) and rsvg-convert (http://librsvg.sourceforge.net/), has been tested on Ubuntu.
+Requires dot (http://www.graphviz.org/), rsvg-convert (http://librsvg.sourceforge.net/) and pic2plot (http://www.gnu.org/software/plotutils/), has been developed and tested on Ubuntu.
+For scruffy output Purisa font is used by default if it's available. More fallback fonts will be added in future.
 
 Class diagrams
 --------------
