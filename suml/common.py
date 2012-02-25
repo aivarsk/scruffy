@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import subprocess
+from operator import attrgetter
 
 def hasFont(fname):
     stdout = subprocess.Popen(['fc-list', fname], shell=True, stdout=subprocess.PIPE).stdout
@@ -36,7 +37,7 @@ class Box:
     def __init__(self, name, spec):
         self.name = name
         self.spec = spec
-        self.uid = 'A%d' % Box.n
+        self.uid = 'A%03d' % Box.n
         Box.n += 1
 
     def update(self, spec):
@@ -52,4 +53,6 @@ def getBox(spec):
     return _boxes[name].update(spec)
 
 def getBoxes():
-    return _boxes.values()
+    x = _boxes.values()
+    x.sort(key=attrgetter('uid'))
+    return x
