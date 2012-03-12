@@ -207,7 +207,8 @@ def transform(fin, fout, options):
 
     if options.png:
         import subprocess
-        subprocess.Popen(['rsvg-convert', '-f', 'png'], stdin=subprocess.PIPE, stdout=fout).communicate(input=scruffySvg)
+        png = subprocess.Popen(['rsvg-convert', '-f', 'png'], stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input=scruffySvg)[0]
+        fout.write(png)
     else:
         fout.write(scruffySvg)
 

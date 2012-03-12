@@ -37,4 +37,6 @@ suml --png --font-family Purisa --scruffy "[note: You can stick notes on diagram
 suml --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > tmp/sample15-scruffy.png
 suml --font-family Purisa --svg --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > tmp/sample15-scruffy.svg
 
+suml --svg --scruffy --sequence "[Patron]order food>[Waiter],[Waiter]order food>[Cook],[Waiter]serve wine>[Patron],[Cook]pickup>[Waiter],[Waiter]serve food>[Patron],[Patron]pay>[Cashier]" > tmp/sequence1-scruffy.svg
 suml --png --scruffy --sequence "[Patron]order food>[Waiter],[Waiter]order food>[Cook],[Waiter]serve wine>[Patron],[Cook]pickup>[Waiter],[Waiter]serve food>[Patron],[Patron]pay>[Cashier]" > tmp/sequence1-scruffy.png
+

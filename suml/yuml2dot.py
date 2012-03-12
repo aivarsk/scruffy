@@ -48,31 +48,11 @@ Splash of Colour    [Customer{bg:orange}]<>1->*[Order{bg:green}]
 
 import sys
 import textwrap
-
-def splitYUML(spec):
-    word = ''
-    shapeDepth = 0
-    for c in spec:
-        if c == '[':
-            shapeDepth += 1
-        elif c == ']':
-            shapeDepth -= 1
-
-        if shapeDepth == 1 and c == '[':
-            yield word.strip()
-            word = c
-            continue
-
-        word += c
-        if shapeDepth == 0 and c == ']':
-            yield word.strip()
-            word = ''
-    if word:
-        yield word.strip()
+import common
 
 def yumlExpr(spec):
     expr = []
-    for part in splitYUML(spec):
+    for part in common.splitYUML(spec):
         if not part: continue
         if part == ',':
             if expr: yield expr

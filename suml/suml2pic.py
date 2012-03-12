@@ -32,30 +32,9 @@ import common
 
 sequence_pic = os.path.join(os.path.dirname(__file__), 'sequence.pic')
 
-def splitYUML(spec):
-    word = ''
-    shapeDepth = 0
-    for c in spec:
-        if c == '[':
-            shapeDepth += 1
-        elif c == ']':
-            shapeDepth -= 1
-
-        if shapeDepth == 1 and c == '[':
-            yield word.strip()
-            word = c
-            continue
-
-        word += c
-        if shapeDepth == 0 and c == ']':
-            yield word.strip()
-            word = ''
-    if word:
-        yield word.strip()
-
 def sumlExpr(spec):
     expr = []
-    for part in splitYUML(spec):
+    for part in common.splitYUML(spec):
         if not part: continue
         if part == ',':
             if expr: yield expr
@@ -124,15 +103,21 @@ def transform(expr, fout, options):
 
     if options.png or options.svg:
         import subprocess
+        import StringIO
 
         if options.scruffy:
-            import StringIO
             import scruffy
 
             svg = subprocess.Popen(['pic2plot', '-Tsvg'], stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input=pic)[0]
-            scruffy.transform(StringIO.StringIO(svg), fout, options)
+            if options.png:
+                tocrop = StringIO.StringIO()
+                scruffy.transform(StringIO.StringIO(svg), tocrop, options)
+                common.crop(StringIO.StringIO(tocrop.getvalue()), fout)
+            else:
+                scruffy.transform(StringIO.StringIO(svg), fout, options)
         elif options.png:
-            subprocess.Popen(['pic2plot', '-Tpng'], stdin=subprocess.PIPE, stdout=fout).communicate(input=pic)
+            png = subprocess.Popen(['pic2plot', '-Tpng'], stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input=pic)[0]
+            common.crop(StringIO.StringIO(png), fout)
         elif options.svg:
             subprocess.Popen(['pic2plot', '-Tsvg'], stdin=subprocess.PIPE, stdout=fout).communicate(input=pic)
     else:

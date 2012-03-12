@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import subprocess
+from PIL import Image, ImageChops
 from operator import attrgetter
 
 def hasFont(fname):
@@ -56,3 +57,33 @@ def getBoxes():
     x = _boxes.values()
     x.sort(key=attrgetter('uid'))
     return x
+
+def splitYUML(spec):
+    word = ''
+    shapeDepth = 0
+    for c in spec:
+        if c == '[':
+            shapeDepth += 1
+        elif c == ']':
+            shapeDepth -= 1
+
+        if shapeDepth == 1 and c == '[':
+            yield word.strip()
+            word = c
+            continue
+
+        word += c
+        if shapeDepth == 0 and c == ']':
+            yield word.strip()
+            word = ''
+    if word:
+        yield word.strip()
+
+def crop(fin, fout):
+    img = Image.open(fin)
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    bg = Image.new('RGB', img.size, (255, 255, 255))
+    diff = ImageChops.difference(img, bg)
+    area = img.crop(diff.getbbox())
+    area.save(fout, 'png')
