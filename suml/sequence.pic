@@ -54,6 +54,22 @@ define object {
 	lifestart_$1 = $1.s.y;
 }
 
+# Create a new object3(name,label,width)
+define object3 {
+	$1: box $2 width $3; move;
+	# Could also underline text with \mk\ul\ul\ul...\rt
+	if (underline) then {
+		line from $1.w + (.1, -.07) to $1.e + (-.1, -.07);
+	}
+	move to $1.e;
+	move right;
+	# Active is the level of activations of the object
+	# 0 : inactive : draw thin line swimlane
+	# 1 : active : draw thick swimlane
+	# > 1: nested : draw nested swimlane
+	active_$1 = 0;
+	lifestart_$1 = $1.s.y;
+}
 # Create a new external actor(name,label)
 define actor {
 	$1: [
