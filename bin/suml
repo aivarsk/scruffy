@@ -29,6 +29,8 @@ parser.add_option('-s', '--svg', action='store_true', dest='svg',
                 help='create a svg file')
 parser.add_option('--scruffy', action='store_true', dest='scruffy',
                 help='process result with scruffy (works for svg and png output)')
+parser.add_option('--shadow', action='store_true', dest='shadow', default=False,
+                help='add shadow to scruffy output')
 parser.add_option('--sequence', action='store_true', dest='sequence',
                 help='draw sequence diagram')
 parser.add_option('--class', action='store_true', dest='klass',

@@ -160,7 +160,8 @@ def _transform(root, options, level=0):
         # Skip background rect/polygon
         if child.tag == ns('polygon') and level != 0:
             transformPolygon(child)
-            transformAddShade(root, child)
+            if options.shadow:
+                transformAddShade(root, child)
             transformAddGradient(child)
 
         elif child.tag == ns('path'):
