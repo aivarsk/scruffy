@@ -55,6 +55,9 @@ def sumlExpr(spec):
 
     if expr: yield expr
 
+def getFontWidth():
+    return 0.13
+
 def suml2pic(spec, options):
     exprs = list(sumlExpr(spec))
 
@@ -84,9 +87,8 @@ def suml2pic(spec, options):
                 messages.append('message(%s,%s,"%s");' % (box2.uid, box1.uid, expr[1][1]))
 
     for box in common.getBoxes():
-        n = 0.13 * len(box.spec)
         #pic.append('object(%s,"%s");' % (box.uid, box.spec))
-        pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, n))
+        pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, getFontWidth() * len(box.spec)))
     pic.append('step();')
     for box in common.getBoxes():
         pic.append('active(%s);' % (box.uid))

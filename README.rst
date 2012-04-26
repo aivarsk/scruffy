@@ -45,10 +45,10 @@ Class diagram extensions
 
 There are some extensions to yUML syntax:
 
-[ClassA|field1;field2] and following [ClassA] refer to the same class (block) so
+[ClassA|field1;field2] and following [ClassA] refer to the same class (box) so
 you don't have to repeat all the class members in each relation.
 
-You can group put classes (blocks) inside another block using "embedded classes" like [Group [NodeA][NodeB]] This is not related to UML class diagrams, but might be useful to communicate you ideas.
+You can group put classes (boxes) inside another box using "embedded classes" like [Group [NodeA][NodeB]] This is not related to UML class diagrams, but might be useful to communicate you ideas.
 
 suml --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15-scruffy.png
 
