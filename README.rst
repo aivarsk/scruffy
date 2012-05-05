@@ -23,6 +23,8 @@ Full Class        [Customer|Forename;Surname;Email|Save()]
 Splash of Colour  [Customer{bg:orange}]<>1->*[Order{bg:green}]
 ================  =========================================================  
 
+Simple example:
+
 suml --png "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13.png
 
 .. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample13.png
@@ -30,6 +32,8 @@ suml --png "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" 
 suml --png --font-family Purisa --scruffy "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13-scruffy.png
 
 .. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample13-scruffy.png
+
+More complex example:
 
 suml --png "[note: You can stick notes on diagrams too!{bg:cornsilk}],[Customer]<>1-orders 0..*>[Order], [Order]++*-*>[LineItem], [Order]-1>[DeliveryMethod], [Order]*-*>[Product], [Category]<->[Product], [DeliveryMethod]^[National], [DeliveryMethod]^[International]" > samples/sample14.png
 
@@ -48,7 +52,7 @@ There are some extensions to yUML syntax:
 [ClassA|field1;field2] and following [ClassA] refer to the same class (box) so
 you don't have to repeat all the class members in each relation.
 
-You can group put classes (boxes) inside another box using "embedded classes" like [Group [NodeA][NodeB]] This is not related to UML class diagrams, but might be useful to communicate you ideas.
+You can group/put classes (boxes) inside another box using "embedded classes" like [Group [NodeA][NodeB]] This is not related to UML class diagrams, but might be useful to communicate you ideas.
 
 suml --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15-scruffy.png
 
