@@ -181,7 +181,7 @@ def yuml2dot(spec, options):
                 dot.append('        fontsize = 10')
                 if options.font:
                     dot.append('        fontname = "%s"' % (options.font))
-                dot.append('        margin = 0.20,0.05')
+                dot.append('        margin = "0.20,0.05"')
                 dot.append('    ]')
                 dot.append('    %s [' % (uid))
 
