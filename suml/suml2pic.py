@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # Copyright (C) 2011 by Aivars Kalvans <aivars.kalvans@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,9 +26,7 @@
 '''
 
 import os
-import sys
-import textwrap
-import common
+from . import common
 
 sequence_pic = os.path.join(os.path.dirname(__file__), 'sequence.pic')
 
@@ -65,7 +63,7 @@ def suml2pic(spec, options):
     pic.append('.PS')
     pic.append('copy "%s";' % (sequence_pic))
     pic.append('underline=0;')
-    
+
     messages = []
     for expr in exprs:
         assert len(expr) in (1, 3)
@@ -79,7 +77,7 @@ def suml2pic(spec, options):
 
             box1 = common.getBox(expr[0][1])
             box2 = common.getBox(expr[2][1])
-            
+
             msgType = expr[1][0]
             if msgType == '>':
                 messages.append('message(%s,%s,"%s");' % (box1.uid, box2.uid, expr[1][1]))
