@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # Copyright (C) 2011 by Aivars Kalvans <aivars.kalvans@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,9 +46,8 @@ Splash of Colour    [Customer{bg:orange}]<>1->*[Order{bg:green}]
 
 '''
 
-import sys
 import textwrap
-import common
+from . import common
 
 def yumlExpr(spec):
     expr = []
@@ -144,7 +143,7 @@ def yuml2dot(spec, options):
     exprs = list(yumlExpr(spec))
 
     if len(exprs) > 5: options.rankdir = 'TD'
-    else: options.rankdir = 'LR' 
+    else: options.rankdir = 'LR'
 
     dot = []
     dot.append('digraph G {')
@@ -162,7 +161,7 @@ def yuml2dot(spec, options):
                 dot.append('    subgraph %s {' % (uid))
                 dot.append('        label = "%s"' % (label))
                 dot.append('        fontsize = 10')
-            
+
                 if options.font:
                     dot.append('        fontname = "%s"' % (options.font))
                 for node in elem[3]:
