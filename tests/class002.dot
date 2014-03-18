@@ -1,0 +1,13 @@
+digraph G {
+    ranksep = 1
+    rankdir = LR
+    node [
+        shape = "record"
+        height = 0.50
+        fontsize = 10
+        margin = "0.20,0.05"
+    ]
+    A0 [
+        label = "class\{"
+    ]
+}

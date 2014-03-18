@@ -49,6 +49,17 @@ Splash of Colour    [Customer{bg:orange}]<>1->*[Order{bg:green}]
 import textwrap
 from . import common
 
+def escape_label(label):
+    """ Escape label string for DOT
+        TODO: check spec if everything is here
+    """
+    label = label.replace('{', '\\{').replace('}', '\\}')
+    label = label.replace(';', '\\n')
+    label = label.replace(' ', '\\ ')
+    label = label.replace('<', '\\<').replace('>', '\\>')
+    label = label.replace('\\n\\n', '\\n')
+    return label
+
 def yumlExpr(spec):
     expr = []
     for part in common.splitYUML(spec):
@@ -188,8 +199,6 @@ def yuml2dot(spec, options):
                 # Looks like table / class with attributes and methods
                 if '|' in label:
                     label = label + '\\n'
-                    if options.rankdir == 'TD':
-                        label = '{' + label + '}'
                     label = label.replace('|', '\\n|')
                 else:
                     lines = []
@@ -197,10 +206,10 @@ def yuml2dot(spec, options):
                         lines.extend(textwrap.wrap(line, 20, break_long_words=False))
                     label = '\\n'.join(lines)
 
-                label = label.replace(';', '\\n')
-                label = label.replace(' ', '\\ ')
-                label = label.replace('<', '\\<').replace('>', '\\>')
-                label = label.replace('\\n\\n', '\\n')
+                label = escape_label(label)
+
+                if '|' in label and options.rankdir == 'TD':
+                    label = '{' + label + '}'
 
                 dot.append('        label = "%s"' % (label))
                 if elem[2]:
