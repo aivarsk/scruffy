@@ -53,7 +53,8 @@ def yumlExpr(spec):
     expr = []
     for part in common.splitYUML(spec):
         if not part: continue
-        if part == ',':
+        # End of line, eat multiple empty lines (part is like ',,,,')
+        if len(part) > 0 and len(part.replace(',', '')) == 0:
             if expr: yield expr
             expr = []
         elif part == '^':

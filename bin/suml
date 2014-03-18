@@ -49,8 +49,8 @@ if options.output:
     fout = open(options.output, 'wb')
 
 if len(args) == 0:
-    spec = sys.stdin.read()
-    spec = spec.replace('\n', ',')
+    lines = sys.stdin.read()
+    spec = lines.replace('\n', ',')
 else:
     spec = args[0]
 
