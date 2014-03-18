@@ -1,0 +1,24 @@
+.PS
+copy "/usr/local/lib/python2.7/dist-packages/suml/sequence.pic";
+underline=0;
+object3(A000,"Patron",0.780000);
+object3(A001,"Waiter",0.780000);
+object3(A002,"Cook",0.520000);
+object3(A003,"Cashier",0.910000);
+step();
+active(A000);
+active(A001);
+active(A002);
+active(A003);
+message(A000,A001,"order food");
+message(A001,A002,"order food");
+message(A001,A000,"serve wine");
+message(A002,A001,"pickup");
+message(A001,A000,"serve food");
+message(A000,A003,"pay");
+step();
+complete(A000);
+complete(A001);
+complete(A002);
+complete(A003);
+.PE

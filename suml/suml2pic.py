@@ -57,6 +57,7 @@ def getFontWidth():
     return 0.13
 
 def suml2pic(spec, options):
+    boxes = common.Boxes()
     exprs = list(sumlExpr(spec))
 
     pic = []
@@ -69,14 +70,14 @@ def suml2pic(spec, options):
         assert len(expr) in (1, 3)
         if len(expr) == 1:
             assert expr[0][0] == 'record'
-            common.getBox(expr[0][1])
+            boxes.addBox(expr[0][1])
 
         elif len(expr) == 3:
             assert expr[0][0] == 'record'
             assert expr[2][0] == 'record'
 
-            box1 = common.getBox(expr[0][1])
-            box2 = common.getBox(expr[2][1])
+            box1 = boxes.addBox(expr[0][1])
+            box2 = boxes.addBox(expr[2][1])
 
             msgType = expr[1][0]
             if msgType == '>':
@@ -84,17 +85,19 @@ def suml2pic(spec, options):
             elif msgType == '<':
                 messages.append('message(%s,%s,"%s");' % (box2.uid, box1.uid, expr[1][1]))
 
-    for box in common.getBoxes():
+    all_boxes = boxes.getBoxes()
+
+    for box in all_boxes:
         #pic.append('object(%s,"%s");' % (box.uid, box.spec))
         pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, getFontWidth() * len(box.spec)))
     pic.append('step();')
-    for box in common.getBoxes():
+    for box in all_boxes:
         pic.append('active(%s);' % (box.uid))
 
     pic.extend(messages)
 
     pic.append('step();')
-    for box in common.getBoxes():
+    for box in all_boxes:
         pic.append('complete(%s);' % (box.uid))
 
     pic.append('.PE')

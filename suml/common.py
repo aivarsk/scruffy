@@ -22,15 +22,16 @@ import subprocess
 from PIL import Image, ImageChops
 from operator import attrgetter
 
-def hasFont(fname):
-    stdout = subprocess.Popen(['fc-list', fname], shell=True, stdout=subprocess.PIPE).stdout
+def hasFont(font_name):
+    """ Checks if font is installed (using fc-list; are there other possibilities?) """
+    stdout = subprocess.Popen(['fc-list', font_name], shell=True, stdout=subprocess.PIPE).stdout
     return len(stdout.readlines()) > 0
 
 def defaultScruffyFont():
-    for fname in ('Purisa',):
-        if hasFont(fname):
-            return fname
-
+    """ Returns installed font with scruffy look """
+    for font_name in ('Purisa',):
+        if hasFont(font_name):
+            return font_name
     return None
 
 class Box:
@@ -46,17 +47,20 @@ class Box:
             self.spec = spec
         return self
 
-_boxes = {}
-def getBox(spec):
-    name = spec.split('|')[0].strip()
-    if name not in _boxes:
-        _boxes[name] = Box(name, spec)
-    return _boxes[name].update(spec)
+class Boxes:
+    def __init__(self):
+        self.boxes = {}
 
-def getBoxes():
-    x = _boxes.values()
-    x.sort(key=attrgetter('uid'))
-    return x
+    def addBox(self, spec):
+        name = spec.split('|')[0].strip()
+        if name not in self.boxes:
+            self.boxes[name] = Box(name, spec)
+        return self.boxes[name].update(spec)
+
+    def getBoxes(self):
+        res = self.boxes.values()
+        res.sort(key=attrgetter('uid'))
+        return res 
 
 def splitYUML(spec):
     word = ''
