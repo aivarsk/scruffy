@@ -28,27 +28,31 @@ parser.add_option('-p', '--png', action='store_true', dest='png',
 parser.add_option('-s', '--svg', action='store_true', dest='svg',
                 help='create a svg file')
 parser.add_option('--scruffy', action='store_true', dest='scruffy',
-                help='process result with scruffy (works for svg and png output)')
+                help='process result with scruffy (works for svg and png output_file)')
 parser.add_option('--shadow', action='store_true', dest='shadow', default=False,
-                help='add shadow to scruffy output')
+                help='add shadow to scruffy output_file')
 parser.add_option('--sequence', action='store_true', dest='sequence',
                 help='draw sequence diagram')
 parser.add_option('--class', action='store_true', dest='klass',
                 help='draw class diagram')
-parser.add_option('-o', '--output', action='store', dest='output',
-                help='output file name')
+parser.add_option('-o', '--output_file', action='store', dest='output_file',
+                help='output_file file name')
+parser.add_option('-i', '--input_file', action='store', dest='input_file',
+                help='input_file file name')
 parser.add_option('--font-family', action='store', dest='font',
-                help='set output font family')
+                help='set output_file font family')
 (options, args) = parser.parse_args()
 
 if len(args) > 1:
     parser.error('Too many arguments')
 
 fout = sys.stdout
-if options.output:
-    fout = open(options.output, 'wb')
+if options.output_file:
+    fout = open(options.output_file, 'wb')
 
-if len(args) == 0:
+if options.input_file:
+    spec = open(options.input_file, 'r').read()
+elif len(args) == 0:
     lines = sys.stdin.read()
     spec = lines.replace('\n', ',')
 else:
