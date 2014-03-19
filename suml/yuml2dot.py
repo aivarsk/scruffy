@@ -47,7 +47,7 @@ Splash of Colour    [Customer{bg:orange}]<>1->*[Order{bg:green}]
 '''
 
 import textwrap
-from . import common
+import common
 
 def escape_label(label):
     """ Escape label string for DOT

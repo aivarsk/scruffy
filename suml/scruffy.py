@@ -194,6 +194,7 @@ def transform(fin, fout, options):
         options.png (boolean)   Try to produce PNG output
         options.font (string)   Font family to use (Ubuntu: Purisa)
     '''
+    etree.register_namespace('', 'http://www.w3.org/2000/svg')
     root = etree.parse(fin).getroot()
 
 
