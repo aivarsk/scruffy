@@ -35,6 +35,7 @@ Labels  [Person]customer-billingAddress[Address]
 Notes   [Person]-[Address],[Address]-[note: Value Object]
 Full Class  [Customer|Forename;Surname;Email|Save()]
 Splash of Colour    [Customer{bg:orange}]<>1->*[Order{bg:green}]
+Comment:        // Comments
 
 [Foo|valueProp]
 [Foo]entityRef->[Bar]
@@ -65,7 +66,8 @@ def yumlExpr(spec):
     for part in common.splitYUML(spec):
         if not part: continue
         # End of line, eat multiple empty lines (part is like ',,,,')
-        if len(part) > 0 and len(part.replace(',', '')) == 0:
+        if len(part) > 0 \
+                and (len(part.strip(',')) == 0 or part.strip(',').startswith('//')):
             if expr: yield expr
             expr = []
         elif part == '^':
