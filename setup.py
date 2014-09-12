@@ -27,7 +27,7 @@ if which('pic2plot') is None:
     sys.exit('You need pic2plot [plotutils] binary for this software to work')
 
 setup(name='scruffy',
-        version='0.2',
+        version='0.3',
         description='Scruffy UML: Creates UML diagrams using yUML-like syntax',
         author='Aivars Kalvans',
         author_email='aivars.kalvans@gmail.com',
