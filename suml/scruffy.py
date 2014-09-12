@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # Copyright (C) 2011 by Aivars Kalvans <aivars.kalvans@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,6 +31,10 @@ import sys
 import math
 import random
 import xml.etree.ElementTree as etree
+
+# python2.6 support
+if sys.version_info[0:2] < (2, 7, 0):
+    etree.register_namespace = lambda x, y: None
 
 gCoordinates = 'px'
 
@@ -61,7 +65,7 @@ def splitLine(p1, p2, l):
     return (p1[0] + l * ax, p1[1] + l * ay)
 
 def frandrange(start, stop):
-    ''' random.randrange for floats ''' 
+    ''' random.randrange for floats '''
     start, stop = int(start * 10.0), int(stop * 10.0)
     r = random.randrange(start, stop)
     return r / 10.0
@@ -184,8 +188,8 @@ def _transform(root, options, level=0):
         etree.SubElement(filterBlur, ns('feGaussianBlur'), {'stdDeviation': '0.69', 'id':'feGaussianBlurBlur'})
         for name in _usedColors:
             gradient = etree.SubElement(defs, ns('linearGradient'), {'id': name, 'x1':"0%", 'xy':"0%", 'x2':"100%", 'y2':"100%"})
-            etree.SubElement(gradient, ns('stop'), {'offset':'0%', 'style':'stop-color:white;stop-opacity:1'}) 
-            etree.SubElement(gradient, ns('stop'), {'offset':'50%', 'style':'stop-color:%s;stop-opacity:1' % name}) 
+            etree.SubElement(gradient, ns('stop'), {'offset':'0%', 'style':'stop-color:white;stop-opacity:1'})
+            etree.SubElement(gradient, ns('stop'), {'offset':'50%', 'style':'stop-color:%s;stop-opacity:1' % name})
 
 def transform(fin, fout, options):
     '''
