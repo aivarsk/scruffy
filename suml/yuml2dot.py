@@ -48,7 +48,7 @@ Comment:        // Comments
 '''
 
 import textwrap
-import common
+from . import common
 
 def escape_label(label):
     """ Escape label string for DOT
