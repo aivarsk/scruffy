@@ -26,7 +26,7 @@
 '''
 
 import os
-import common
+from . import common
 
 sequence_pic = os.path.join(os.path.dirname(__file__), 'sequence.pic')
 
