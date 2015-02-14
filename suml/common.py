@@ -1,15 +1,15 @@
 # Copyright (C) 2011 by Aivars Kalvans <aivars.kalvans@gmail.com>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,6 +40,8 @@ class Box:
         self.name = name
         self.spec = spec
         self.uid = 'A%03d' % Box.n
+        self.right_margin = 0
+        self.width = 0
         Box.n += 1
 
     def update(self, spec):
@@ -60,7 +62,7 @@ class Boxes:
     def getBoxes(self):
         res = self.boxes.values()
         res.sort(key=attrgetter('uid'))
-        return res 
+        return res
 
 def splitYUML(spec):
     word = ''

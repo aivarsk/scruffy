@@ -79,17 +79,30 @@ def suml2pic(spec, options):
             box1 = boxes.addBox(expr[0][1])
             box2 = boxes.addBox(expr[2][1])
 
-            msgType = expr[1][0]
-            if msgType == '>':
-                messages.append('message(%s,%s,"%s");' % (box1.uid, box2.uid, expr[1][1]))
-            elif msgType == '<':
-                messages.append('message(%s,%s,"%s");' % (box2.uid, box1.uid, expr[1][1]))
+            for x in (box1, box2):
+                x.width = len(x.spec) * getFontWidth()
+
+            msg = expr[1][1]
+            msg_len = len(msg)
+            msg_type = expr[1][0]
+            msg_width = msg_len * getFontWidth()
+
+            if msg_type == '<':
+                box1, box2 = box2, box1
+
+            right_margin = msg_width - box1.width / 2.0 - box2.width / 2.0
+            if right_margin > box1.right_margin:
+                box1.right_margin = right_margin
+
+            messages.append('message(%s,%s,"%s");' % (box1.uid, box2.uid, msg))
 
     all_boxes = boxes.getBoxes()
 
     for box in all_boxes:
-        #pic.append('object(%s,"%s");' % (box.uid, box.spec))
-        pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, getFontWidth() * len(box.spec)))
+        if box.right_margin == 0:
+            pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, box.width))
+        else:
+            pic.append('object3(%s,"%s",%f,%f);' % (box.uid, box.spec, box.width, box.right_margin))
     pic.append('step();')
     for box in all_boxes:
         pic.append('active(%s);' % (box.uid))
