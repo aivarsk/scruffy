@@ -105,7 +105,7 @@ def suml2pic(spec, options):
     all_boxes = boxes.getBoxes()
 
     for box in all_boxes:
-        if box.right_margin == 0:
+        if not box.right_margin:
             pic.append('object3(%s,"%s",%f);' % (box.uid, box.spec, box.width))
         else:
             pic.append('object3(%s,"%s",%f,%f);' % (box.uid, box.spec, box.width, box.right_margin))
