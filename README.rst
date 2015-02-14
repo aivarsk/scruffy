@@ -27,21 +27,21 @@ Simple example:
 
 suml --png "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample13.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sample13.png
 
 suml --png --font-family Purisa --scruffy "[User|+Forename;+Surname;+HashedPassword;-Salt|+Login();+Logout()]" > samples/sample13-scruffy.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample13-scruffy.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sample13-scruffy.png
 
 More complex example:
 
 suml --png "[note: You can stick notes on diagrams too!{bg:cornsilk}],[Customer]<>1-orders 0..*>[Order], [Order]++*-*>[LineItem], [Order]-1>[DeliveryMethod], [Order]*-*>[Product], [Category]<->[Product], [DeliveryMethod]^[National], [DeliveryMethod]^[International]" > samples/sample14.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample14.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sample14.png
 
 suml --png --font-family Purisa --scruffy "[note: You can stick notes on diagrams too!{bg:cornsilk}],[Customer]<>1-orders 0..*>[Order], [Order]++*-*>[LineItem], [Order]-1>[DeliveryMethod], [Order]*-*>[Product], [Category]<->[Product], [DeliveryMethod]^[National], [DeliveryMethod]^[International]" > samples/sample14-scruffy.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample14-scruffy.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sample14-scruffy.png
 
 
 Class diagram extensions
@@ -56,7 +56,7 @@ You can group/put classes (boxes) inside another box using "embedded classes" li
 
 suml --png --font-family Purisa --scruffy "[Node A]->[Node B],[Node B]->[Node C],[Group [Node A][Node B]]" > samples/sample15-scruffy.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sample15-scruffy.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sample15-scruffy.png
 
 Sequence diagrams
 -----------------
@@ -70,4 +70,4 @@ Send message    [Object1]Message>[Object2] or [Object1]<Message[Object2]
 
 suml --png --scruffy --sequence "[Patron]order food>[Waiter],[Waiter]order food>[Cook],[Waiter]serve wine>[Patron],[Cook]pickup>[Waiter],[Waiter]serve food>[Patron],[Patron]pay>[Cashier]" > tmp/sequence1-scruffy.png
 
-.. image:: https://github.com/aivarsk/scruffy/raw/master/samples/sequence1-scruffy.png
+.. image:: https://github.com/S010/scruffy/raw/master/samples/sequence1-scruffy.png
