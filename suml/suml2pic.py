@@ -70,7 +70,9 @@ def suml2pic(spec, options):
         assert len(expr) in (1, 3)
         if len(expr) == 1:
             assert expr[0][0] == 'record'
-            boxes.addBox(expr[0][1])
+            box = boxes.addBox(expr[0][1])
+            if not box.width:
+                box.width = len(expr[0][1]) * getFontWidth()
 
         elif len(expr) == 3:
             assert expr[0][0] == 'record'
@@ -80,7 +82,8 @@ def suml2pic(spec, options):
             box2 = boxes.addBox(expr[2][1])
 
             for x in (box1, box2):
-                x.width = len(x.spec) * getFontWidth()
+                if not x.width:
+                    x.width = len(x.spec) * getFontWidth()
 
             msg = expr[1][1]
             msg_len = len(msg)
