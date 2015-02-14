@@ -90,12 +90,15 @@ def suml2pic(spec, options):
             msg_type = expr[1][0]
             msg_width = msg_len * getFontWidth()
 
+            left_box = box1
+            if box2.uid < box1.uid:
+                left_box = box2
+            right_margin = msg_width - box1.width / 2.0 - box2.width / 2.0
+            if right_margin > left_box.right_margin:
+                left_box.right_margin = right_margin
+
             if msg_type == '<':
                 box1, box2 = box2, box1
-
-            right_margin = msg_width - box1.width / 2.0 - box2.width / 2.0
-            if right_margin > box1.right_margin:
-                box1.right_margin = right_margin
 
             messages.append('message(%s,%s,"%s");' % (box1.uid, box2.uid, msg))
 
