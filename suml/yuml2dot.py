@@ -48,7 +48,13 @@ Comment:        // Comments
 '''
 
 import textwrap
-from . import common
+import common
+
+def escape_token_escapes(spec):
+    return spec.replace('\\[', '\\u005b').replace('\\]', '\\u005d')
+
+def unescape_token_escapes(spec):
+    return spec.replace('\\u005b', '[').replace('\\u005d', ']')
 
 def escape_label(label):
     """ Escape label string for DOT
@@ -63,7 +69,8 @@ def escape_label(label):
 
 def yumlExpr(spec):
     expr = []
-    for part in common.splitYUML(spec):
+    
+    for part in common.splitYUML(escape_token_escapes(spec)):        
         if not part: continue
         # End of line, eat multiple empty lines (part is like ',,,,')
         if len(part) > 0 \
@@ -86,14 +93,14 @@ def yumlExpr(spec):
                 bg = x[1][:-1]
 
             if part.startswith('note:'):
-                expr.append(('note', part[5:].strip(), bg))
+                expr.append(('note', unescape_token_escapes(part[5:].strip()), bg))
             elif '[' in part and ']' in part:
                 p = part.split('[')
                 part = p[0]
                 nodes = [node.replace(']', '').strip() for node in p[1:]]
-                expr.append(('cluster', part.strip(), bg, nodes))
+                expr.append(('cluster', unescape_token_escapes(part.strip()), bg, nodes))
             else:
-                expr.append(('record', part.strip(), bg))
+                expr.append(('record', unescape_token_escapes(part.strip()), bg))
         elif '-' in part:
             if '-.-' in part:
                 style = 'dashed'
