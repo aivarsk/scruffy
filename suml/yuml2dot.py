@@ -65,6 +65,7 @@ def escape_label(label):
     label = label.replace(' ', '\\ ')
     label = label.replace('<', '\\<').replace('>', '\\>')
     label = label.replace('\\n\\n', '\\n')
+    label = label.replace('\\l\\l', '\\l')
     return label
 
 def yumlExpr(spec):
@@ -207,8 +208,9 @@ def yuml2dot(spec, options):
 
                 # Looks like table / class with attributes and methods
                 if '|' in label:
-                    label = label + '\\n'
-                    label = label.replace('|', '\\n|')
+                    label = label + '\\l'
+                    label = label.replace('|', '\\l|')
+                    label = label.replace(';', '\\l')
                 else:
                     lines = []
                     for line in label.split(';'):
