@@ -61,8 +61,7 @@ class Boxes:
 
     def getBoxes(self):
         res = self.boxes.values()
-        res.sort(key=attrgetter('uid'))
-        return res
+        return sorted(res, key=attrgetter('uid'))
 
 def splitYUML(spec):
     word = ''

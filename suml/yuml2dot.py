@@ -48,7 +48,7 @@ Comment:        // Comments
 '''
 
 import textwrap
-import common
+from . import common
 
 def escape_token_escapes(spec):
     return spec.replace('\\[', '\\u005b').replace('\\]', '\\u005d')
@@ -258,7 +258,7 @@ def transform(expr, fout, options):
 
         if options.scruffy:
             import StringIO
-            import scruffy
+            from . import scruffy
 
             svg = subprocess.Popen(['dot', '-Tsvg'], stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input=dot)[0]
             scruffy.transform(StringIO.StringIO(svg), fout, options)

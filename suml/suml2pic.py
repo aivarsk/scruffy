@@ -130,7 +130,7 @@ def transform(expr, fout, options):
         import StringIO
 
         if options.scruffy:
-            import scruffy
+            from . import scruffy
 
             svg = subprocess.Popen(['pic2plot', '-Tsvg'], stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input=pic)[0]
             if options.png:
